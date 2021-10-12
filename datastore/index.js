@@ -114,14 +114,18 @@ exports.update = (id, text, callback) => {
 //fs.writefile
 
 exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
+  // var item = items[id];
+  // delete items[id];
+
+  fs.unlink(`./test/testData/${id}.txt`, (err) => {
+    if (err) {
+      // report an error if item not found
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      callback();
+    }
+
+  });
 };
 
 //fs.unlink?
