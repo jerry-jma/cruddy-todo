@@ -32,31 +32,83 @@ exports.create = (text, callback) => {
 };
 
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
+  fs.readdir('./test/testData/', (err, files) => {
+    if (err) {
+      callback(err);
+    } else {
+      var data = _.map(files, (text, id) => {
+        return {
+          id: text.split('.')[0],
+          text: text.split('.')[0]
+        };
+      });
+      callback(null, data);
+    }
   });
-  callback(null, data);
+  // lagggg
+
+  //[ '00001.txt', '00002.txt' ]
+  //      "id": "00001"
+  //   "text": "00001"
+
+
+  // var data = _.map(items, (text, id) => {
+  //   return { id, text };
+  // });
+  // callback(null, data);
 };
+//https://nodejs.org/docs/latest-v15.x/api/fs.html#fs_fs_readdir_path_options_callback
+
+
+
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+
+  fs.readFile(`./test/testData/${id}.txt`, 'utf8', (err, text) => {
+    if (!text) {
+      callback(new Error(`No item with id: ${id}`));
+    } else {
+      callback(null, { id, text });
+    }
+  });
+
+
+
+
+  // var text = items[id];
+  // if (!text) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback(null, { id, text });
+  // }
 };
 
 // fs.readfile
+// https://nodejs.org/docs/latest-v15.x/api/fs.html#fs_fspromises_readfile_path_options
 
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+
+  fs. access(`./test/testData/${id}.txt`, fs.F_OK, (err) => {
+    if (err) {
+      callback(err);
+    } else {
+      fs.writeFile(`./test/testData/${id}.txt`, text, (err) => {
+        console.log('id', id, 'text', text, 'updatessssss');
+        if (err) {
+          callback(new Error(`No item with id: ${id}`));
+        } else {
+          callback(null, { id, text });
+        }
+      });
+    }
+  });
+  // var item = items[id];
+  // if (!item) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   items[id] = text;
+  //   callback(null, { id, text });
+  // }
 };
 
 //fs.writefile
@@ -73,6 +125,7 @@ exports.delete = (id, callback) => {
 };
 
 //fs.unlink?
+//https://nodejs.org/docs/latest-v15.x/api/fs.html#fs_fspromises_unlink_path
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
