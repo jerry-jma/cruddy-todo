@@ -14,11 +14,13 @@
     "start": "npx nodemon ./server.js",
     "clean": "rm -rf datastore/data/* datastore/counter.txt",
     "lint": "eslint ./",
-    "test": "mocha test"
+    "test": "mocha test",
+    "client": "npx live-server"
   },
   "dependencies": {
     "bluebird": "^3.7.2",
     "express": "^4.17.1",
+    "live-server": "^1.2.1",
     "morgan": "^1.10.0",
     "sprintf-js": "^1.1.2",
     "underscore": "^1.11.0"

@@ -20,7 +20,7 @@ const readCounter = (callback) => {
     if (err) {
       callback(null, 0);
     } else {
-      callback(null, Number(fileData));
+      callback(null, Number(fileData)); // < ------ ######
     }
   });
 };
@@ -38,9 +38,19 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+exports.getNextUniqueId = (callback) => {
+  // counter = counter + 1;
+  // return zeroPaddedNumber(counter);
+  readCounter((err, count) => {
+    if (err) {
+      callback(null, err);
+    } else {
+      count++;
+      writeCounter(zeroPaddedNumber(count), callback);
+    }
+  });
+
+  // use readCounter to find last id number and use writeCounter to write the newest id number counter++
 };
 
 

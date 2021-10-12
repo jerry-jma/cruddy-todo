@@ -8,9 +8,27 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+  // var id = counter.getNextUniqueId();
+  // items[id] = text;
+
+  counter.getNextUniqueId((err, id) => {
+    if (err) {
+      callback(err);
+    } else {
+      fs.writeFile(`./test/testData/${id}.txt`, text, () => {
+        callback(null, { id, text });
+      });
+      // console.log(id , 'HERES THE UNIQUE ID $$$$$$$');
+    }
+  });
+
+  // callback(null, { id, text });
+  // create
+  // 1) should create a new file for each todo
+  // 2) should use the generated unique id as the filename
+  // 3) "before each" hook: cleanTestDatastore
+  // 4) should only save todo text contents in file
+
 };
 
 exports.readAll = (callback) => {
@@ -29,6 +47,8 @@ exports.readOne = (id, callback) => {
   }
 };
 
+// fs.readfile
+
 exports.update = (id, text, callback) => {
   var item = items[id];
   if (!item) {
@@ -38,6 +58,8 @@ exports.update = (id, text, callback) => {
     callback(null, { id, text });
   }
 };
+
+//fs.writefile
 
 exports.delete = (id, callback) => {
   var item = items[id];
@@ -49,6 +71,8 @@ exports.delete = (id, callback) => {
     callback();
   }
 };
+
+//fs.unlink?
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
 
